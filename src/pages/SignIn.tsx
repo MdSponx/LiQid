@@ -26,13 +26,13 @@ const SignIn: React.FC = () => {
       // Check if user has completed onboarding
       if (user && !user.onboardingCompleted) {
         console.log('User has not completed onboarding, redirecting to onboarding');
-        window.location.href = '/onboarding/personal-info';
+        navigate('/onboarding/personal-info');
       } else {
         console.log('User has completed onboarding, redirecting to dashboard');
-        window.location.href = '/dashboard';
+        navigate('/dashboard');
       }
     }
-  }, [isAuthenticated, loading, user]);
+  }, [isAuthenticated, loading, user, navigate]);
 
   const getNextLanguage = (current: string): 'en' | 'th' | 'zh' => {
     const languages: ('en' | 'th' | 'zh')[] = ['en', 'th', 'zh'];
@@ -115,7 +115,7 @@ const SignIn: React.FC = () => {
             // Check if user is authenticated
             if (!auth.currentUser) {
               console.error('User not authenticated');
-              window.location.href = '/signin';
+              navigate('/signin');
               return;
             }
             
@@ -125,15 +125,15 @@ const SignIn: React.FC = () => {
             
             if (userData && userData.onboardingCompleted) {
               console.log('User has completed onboarding, redirecting to dashboard');
-              window.location.href = '/dashboard';
+              navigate('/dashboard');
             } else {
               console.log('User has not completed onboarding, redirecting to onboarding');
-              window.location.href = '/onboarding/personal-info';
+              navigate('/onboarding/personal-info');
             }
           } catch (error) {
             console.error('Error checking onboarding status:', error);
             // Default to dashboard if there's an error
-            window.location.href = '/dashboard';
+            navigate('/dashboard');
           }
         }, 100);
       } else {
@@ -273,15 +273,15 @@ const SignIn: React.FC = () => {
                             
                             if (userData && userData.onboardingCompleted) {
                               console.log('User has completed onboarding, redirecting to dashboard');
-                              window.location.href = '/dashboard';
+                              navigate('/dashboard');
                             } else {
                               console.log('User has not completed onboarding, redirecting to onboarding');
-                              window.location.href = '/onboarding/personal-info';
+                              navigate('/onboarding/personal-info');
                             }
                           } catch (error) {
                             console.error('Error in fallback navigation:', error);
                             // Default to dashboard if there's an error
-                            window.location.href = '/dashboard';
+                            navigate('/dashboard');
                           }
                         }, 1000);
                       }

@@ -35,10 +35,9 @@ const Occupation: React.FC = () => {
         onboardingCompleted: true
       });
       
-      // Use direct navigation with window.location.href instead of React Router
-      // This can help prevent freezing issues during navigation
-      console.log('Using direct navigation to dashboard');
-      window.location.href = '/dashboard';
+      // Use React Router navigation which works better in environments like StackBlitz
+      console.log('Using React Router navigation to dashboard');
+      navigate('/dashboard');
       
       // Return early since we're navigating away
       return;
@@ -103,8 +102,8 @@ const Occupation: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    console.log('Using direct navigation back to personal info');
-                    window.location.href = '/onboarding/personal-info';
+                    console.log('Using React Router navigation back to personal info');
+                    navigate('/onboarding/personal-info');
                   }}
                   className="flex items-center justify-center px-6 py-3 rounded-full border border-gray-300 text-[#577B92] hover:bg-gray-50"
                 >

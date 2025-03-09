@@ -27,10 +27,9 @@ const PersonalInfo: React.FC = () => {
         birthDate,
       });
       
-      // Use direct navigation with window.location.href instead of React Router
-      // This can help prevent freezing issues during navigation
-      console.log('Using direct navigation to occupation page');
-      window.location.href = '/onboarding/occupation';
+      // Use React Router navigation which works better in environments like StackBlitz
+      console.log('Using React Router navigation to occupation page');
+      navigate('/onboarding/occupation');
       
       // Return early since we're navigating away
       return;

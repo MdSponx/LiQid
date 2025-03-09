@@ -32,10 +32,9 @@ const SignUp: React.FC = () => {
       const result = await signUp(email, password);
       
       if (result.success) {
-        // Use direct navigation with window.location.href instead of React Router
-        // This can help prevent freezing issues during navigation
-        console.log('Using direct navigation to onboarding');
-        window.location.href = '/onboarding/personal-info';
+        // Use React Router navigation which works better in environments like StackBlitz
+        console.log('Using React Router navigation to onboarding');
+        navigate('/onboarding/personal-info');
         
         // Return early since we're navigating away
         return;

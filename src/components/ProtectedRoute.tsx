@@ -40,19 +40,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (requireAuth && !isAuthenticated) {
     console.log(`ProtectedRoute: Redirecting to signin from ${location.pathname}`);
-    // Use direct navigation with window.location.href instead of React Router
-    // This can help prevent freezing issues during navigation
-    console.log('Using direct navigation with window.location.href');
-    window.location.href = '/signin';
-    // Return a loading indicator while the redirect happens
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#1E4D3A]">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#F5F5F2] border-t-[#E86F2C] rounded-full animate-spin mb-4"></div>
-          <p className="text-[#F5F5F2] text-sm">Redirecting...</p>
-        </div>
-      </div>
-    );
+    // Use React Router's Navigate component for redirection
+    // This works better in environments like StackBlitz
+    return <Navigate to="/signin" replace />;
   }
 
   // Check if user has completed onboarding
@@ -64,47 +54,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     
     if (!isOnboardingRoute) {
       console.log(`ProtectedRoute: Redirecting to onboarding from ${location.pathname}`);
-      // Redirect to the first step of onboarding
-      window.location.href = '/onboarding/personal-info';
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-[#1E4D3A]">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-[#F5F5F2] border-t-[#E86F2C] rounded-full animate-spin mb-4"></div>
-            <p className="text-[#F5F5F2] text-sm">Redirecting to onboarding...</p>
-          </div>
-        </div>
-      );
+      // Use React Router's Navigate component for redirection
+      return <Navigate to="/onboarding/personal-info" replace />;
     }
   }
 
   // For routes that require completed onboarding
   if (requireOnboarding && isAuthenticated && user && !user.onboardingCompleted) {
     console.log(`ProtectedRoute: Redirecting to onboarding from ${location.pathname}`);
-    window.location.href = '/onboarding/personal-info';
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#1E4D3A]">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#F5F5F2] border-t-[#E86F2C] rounded-full animate-spin mb-4"></div>
-          <p className="text-[#F5F5F2] text-sm">Redirecting to onboarding...</p>
-        </div>
-      </div>
-    );
+    return <Navigate to="/onboarding/personal-info" replace />;
   }
 
   if (!requireAuth && isAuthenticated) {
     console.log(`ProtectedRoute: Redirecting to dashboard from ${location.pathname}`);
-    // Use direct navigation with window.location.href instead of React Router
-    console.log('Using direct navigation with window.location.href');
-    window.location.href = '/dashboard';
-    // Return a loading indicator while the redirect happens
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#1E4D3A]">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#F5F5F2] border-t-[#E86F2C] rounded-full animate-spin mb-4"></div>
-          <p className="text-[#F5F5F2] text-sm">Redirecting...</p>
-        </div>
-      </div>
-    );
+    // Use React Router's Navigate component for redirection
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
