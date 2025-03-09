@@ -40,8 +40,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (requireAuth && !isAuthenticated) {
     console.log(`ProtectedRoute: Redirecting to signin from ${location.pathname}`);
-    // Use React Router's Navigate component for redirection
-    // This works better in environments like StackBlitz
+    
+    // Use a hybrid approach for navigation that works better in StackBlitz
+    // First, try React Router's Navigate component
+    setTimeout(() => {
+      // As a fallback, use a form-based navigation approach
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = '/signin';
+      document.body.appendChild(form);
+      form.submit();
+    }, 300);
+    
+    // Still use React Router's Navigate component as the primary method
     return <Navigate to="/signin" replace />;
   }
 
@@ -54,7 +65,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     
     if (!isOnboardingRoute) {
       console.log(`ProtectedRoute: Redirecting to onboarding from ${location.pathname}`);
-      // Use React Router's Navigate component for redirection
+      
+      // Use a hybrid approach for navigation that works better in StackBlitz
+      // First, try React Router's Navigate component
+      setTimeout(() => {
+        // As a fallback, use a form-based navigation approach
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = '/onboarding/personal-info';
+        document.body.appendChild(form);
+        form.submit();
+      }, 300);
+      
+      // Still use React Router's Navigate component as the primary method
       return <Navigate to="/onboarding/personal-info" replace />;
     }
   }
@@ -62,12 +85,37 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // For routes that require completed onboarding
   if (requireOnboarding && isAuthenticated && user && !user.onboardingCompleted) {
     console.log(`ProtectedRoute: Redirecting to onboarding from ${location.pathname}`);
+    
+    // Use a hybrid approach for navigation that works better in StackBlitz
+    // First, try React Router's Navigate component
+    setTimeout(() => {
+      // As a fallback, use a form-based navigation approach
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = '/onboarding/personal-info';
+      document.body.appendChild(form);
+      form.submit();
+    }, 300);
+    
+    // Still use React Router's Navigate component as the primary method
     return <Navigate to="/onboarding/personal-info" replace />;
   }
 
   if (!requireAuth && isAuthenticated) {
     console.log(`ProtectedRoute: Redirecting to dashboard from ${location.pathname}`);
-    // Use React Router's Navigate component for redirection
+    
+    // Use a hybrid approach for navigation that works better in StackBlitz
+    // First, try React Router's Navigate component
+    setTimeout(() => {
+      // As a fallback, use a form-based navigation approach
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = '/dashboard';
+      document.body.appendChild(form);
+      form.submit();
+    }, 300);
+    
+    // Still use React Router's Navigate component as the primary method
     return <Navigate to="/dashboard" replace />;
   }
 

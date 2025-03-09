@@ -35,9 +35,26 @@ const Occupation: React.FC = () => {
         onboardingCompleted: true
       });
       
-      // Use React Router navigation which works better in environments like StackBlitz
-      console.log('Using React Router navigation to dashboard');
-      navigate('/dashboard');
+      // Use a hybrid approach for navigation that works better in StackBlitz
+      console.log('Using hybrid navigation approach to dashboard');
+      
+      // First, set a flag in sessionStorage to indicate successful completion
+      sessionStorage.setItem('onboardingCompleted', 'true');
+      
+      // Then use a combination of approaches for maximum compatibility
+      setTimeout(() => {
+        // Try React Router navigation first
+        navigate('/dashboard');
+        
+        // As a fallback, use a form-based navigation approach after a short delay
+        setTimeout(() => {
+          const form = document.createElement('form');
+          form.method = 'GET';
+          form.action = '/dashboard';
+          document.body.appendChild(form);
+          form.submit();
+        }, 300);
+      }, 100);
       
       // Return early since we're navigating away
       return;
@@ -102,8 +119,20 @@ const Occupation: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    console.log('Using React Router navigation back to personal info');
-                    navigate('/onboarding/personal-info');
+                    console.log('Using hybrid navigation approach back to personal info');
+                    // Use a hybrid approach for back navigation as well
+                    setTimeout(() => {
+                      navigate('/onboarding/personal-info');
+                      
+                      // Fallback approach
+                      setTimeout(() => {
+                        const form = document.createElement('form');
+                        form.method = 'GET';
+                        form.action = '/onboarding/personal-info';
+                        document.body.appendChild(form);
+                        form.submit();
+                      }, 300);
+                    }, 100);
                   }}
                   className="flex items-center justify-center px-6 py-3 rounded-full border border-gray-300 text-[#577B92] hover:bg-gray-50"
                 >

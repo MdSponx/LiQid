@@ -32,9 +32,26 @@ const SignUp: React.FC = () => {
       const result = await signUp(email, password);
       
       if (result.success) {
-        // Use React Router navigation which works better in environments like StackBlitz
-        console.log('Using React Router navigation to onboarding');
-        navigate('/onboarding/personal-info');
+        // Use a hybrid approach for navigation that works better in StackBlitz
+        console.log('Using hybrid navigation approach to onboarding');
+        
+        // First, set a flag in sessionStorage to indicate successful signup
+        sessionStorage.setItem('signupCompleted', 'true');
+        
+        // Then use a combination of approaches for maximum compatibility
+        setTimeout(() => {
+          // Try React Router navigation first
+          navigate('/onboarding/personal-info');
+          
+          // As a fallback, use a form-based navigation approach after a short delay
+          setTimeout(() => {
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = '/onboarding/personal-info';
+            document.body.appendChild(form);
+            form.submit();
+          }, 300);
+        }, 100);
         
         // Return early since we're navigating away
         return;

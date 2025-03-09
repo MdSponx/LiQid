@@ -27,9 +27,26 @@ const PersonalInfo: React.FC = () => {
         birthDate,
       });
       
-      // Use React Router navigation which works better in environments like StackBlitz
-      console.log('Using React Router navigation to occupation page');
-      navigate('/onboarding/occupation');
+      // Use a hybrid approach for navigation that works better in StackBlitz
+      console.log('Using hybrid navigation approach to occupation page');
+      
+      // First, set a flag in sessionStorage to indicate progress
+      sessionStorage.setItem('personalInfoCompleted', 'true');
+      
+      // Then use a combination of approaches for maximum compatibility
+      setTimeout(() => {
+        // Try React Router navigation first
+        navigate('/onboarding/occupation');
+        
+        // As a fallback, use a form-based navigation approach after a short delay
+        setTimeout(() => {
+          const form = document.createElement('form');
+          form.method = 'GET';
+          form.action = '/onboarding/occupation';
+          document.body.appendChild(form);
+          form.submit();
+        }, 300);
+      }, 100);
       
       // Return early since we're navigating away
       return;

@@ -26,10 +26,38 @@ const SignIn: React.FC = () => {
       // Check if user has completed onboarding
       if (user && !user.onboardingCompleted) {
         console.log('User has not completed onboarding, redirecting to onboarding');
-        navigate('/onboarding/personal-info');
+        
+        // Use a hybrid approach for navigation that works better in StackBlitz
+        setTimeout(() => {
+          // Try React Router navigation first
+          navigate('/onboarding/personal-info');
+          
+          // As a fallback, use a form-based navigation approach after a short delay
+          setTimeout(() => {
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = '/onboarding/personal-info';
+            document.body.appendChild(form);
+            form.submit();
+          }, 300);
+        }, 100);
       } else {
         console.log('User has completed onboarding, redirecting to dashboard');
-        navigate('/dashboard');
+        
+        // Use a hybrid approach for navigation that works better in StackBlitz
+        setTimeout(() => {
+          // Try React Router navigation first
+          navigate('/dashboard');
+          
+          // As a fallback, use a form-based navigation approach after a short delay
+          setTimeout(() => {
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = '/dashboard';
+            document.body.appendChild(form);
+            form.submit();
+          }, 300);
+        }, 100);
       }
     }
   }, [isAuthenticated, loading, user, navigate]);
@@ -115,7 +143,22 @@ const SignIn: React.FC = () => {
             // Check if user is authenticated
             if (!auth.currentUser) {
               console.error('User not authenticated');
-              navigate('/signin');
+              
+              // Use a hybrid approach for navigation that works better in StackBlitz
+              setTimeout(() => {
+                // Try React Router navigation first
+                navigate('/signin');
+                
+                // As a fallback, use a form-based navigation approach after a short delay
+                setTimeout(() => {
+                  const form = document.createElement('form');
+                  form.method = 'GET';
+                  form.action = '/signin';
+                  document.body.appendChild(form);
+                  form.submit();
+                }, 300);
+              }, 100);
+              
               return;
             }
             
@@ -125,15 +168,57 @@ const SignIn: React.FC = () => {
             
             if (userData && userData.onboardingCompleted) {
               console.log('User has completed onboarding, redirecting to dashboard');
-              navigate('/dashboard');
+              
+              // Use a hybrid approach for navigation that works better in StackBlitz
+              setTimeout(() => {
+                // Try React Router navigation first
+                navigate('/dashboard');
+                
+                // As a fallback, use a form-based navigation approach after a short delay
+                setTimeout(() => {
+                  const form = document.createElement('form');
+                  form.method = 'GET';
+                  form.action = '/dashboard';
+                  document.body.appendChild(form);
+                  form.submit();
+                }, 300);
+              }, 100);
             } else {
               console.log('User has not completed onboarding, redirecting to onboarding');
-              navigate('/onboarding/personal-info');
+              
+              // Use a hybrid approach for navigation that works better in StackBlitz
+              setTimeout(() => {
+                // Try React Router navigation first
+                navigate('/onboarding/personal-info');
+                
+                // As a fallback, use a form-based navigation approach after a short delay
+                setTimeout(() => {
+                  const form = document.createElement('form');
+                  form.method = 'GET';
+                  form.action = '/onboarding/personal-info';
+                  document.body.appendChild(form);
+                  form.submit();
+                }, 300);
+              }, 100);
             }
           } catch (error) {
             console.error('Error checking onboarding status:', error);
             // Default to dashboard if there's an error
-            navigate('/dashboard');
+            
+            // Use a hybrid approach for navigation that works better in StackBlitz
+            setTimeout(() => {
+              // Try React Router navigation first
+              navigate('/dashboard');
+              
+              // As a fallback, use a form-based navigation approach after a short delay
+              setTimeout(() => {
+                const form = document.createElement('form');
+                form.method = 'GET';
+                form.action = '/dashboard';
+                document.body.appendChild(form);
+                form.submit();
+              }, 300);
+            }, 100);
           }
         }, 100);
       } else {
@@ -273,15 +358,57 @@ const SignIn: React.FC = () => {
                             
                             if (userData && userData.onboardingCompleted) {
                               console.log('User has completed onboarding, redirecting to dashboard');
-                              navigate('/dashboard');
+                              
+                              // Use a hybrid approach for navigation that works better in StackBlitz
+                              setTimeout(() => {
+                                // Try React Router navigation first
+                                navigate('/dashboard');
+                                
+                                // As a fallback, use a form-based navigation approach after a short delay
+                                setTimeout(() => {
+                                  const form = document.createElement('form');
+                                  form.method = 'GET';
+                                  form.action = '/dashboard';
+                                  document.body.appendChild(form);
+                                  form.submit();
+                                }, 300);
+                              }, 100);
                             } else {
                               console.log('User has not completed onboarding, redirecting to onboarding');
-                              navigate('/onboarding/personal-info');
+                              
+                              // Use a hybrid approach for navigation that works better in StackBlitz
+                              setTimeout(() => {
+                                // Try React Router navigation first
+                                navigate('/onboarding/personal-info');
+                                
+                                // As a fallback, use a form-based navigation approach after a short delay
+                                setTimeout(() => {
+                                  const form = document.createElement('form');
+                                  form.method = 'GET';
+                                  form.action = '/onboarding/personal-info';
+                                  document.body.appendChild(form);
+                                  form.submit();
+                                }, 300);
+                              }, 100);
                             }
                           } catch (error) {
                             console.error('Error in fallback navigation:', error);
                             // Default to dashboard if there's an error
-                            navigate('/dashboard');
+                            
+                            // Use a hybrid approach for navigation that works better in StackBlitz
+                            setTimeout(() => {
+                              // Try React Router navigation first
+                              navigate('/dashboard');
+                              
+                              // As a fallback, use a form-based navigation approach after a short delay
+                              setTimeout(() => {
+                                const form = document.createElement('form');
+                                form.method = 'GET';
+                                form.action = '/dashboard';
+                                document.body.appendChild(form);
+                                form.submit();
+                              }, 300);
+                            }, 100);
                           }
                         }, 1000);
                       }
