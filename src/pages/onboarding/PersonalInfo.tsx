@@ -24,11 +24,16 @@ const PersonalInfo: React.FC = () => {
         firstName,
         lastName,
         nickname,
-        // birthDate is not included in the User type, so we don't add it here
+        birthDate,
       });
       
-      // Navigate to the next step in the onboarding process
-      navigate('/onboarding/occupation');
+      // Use direct navigation with window.location.href instead of React Router
+      // This can help prevent freezing issues during navigation
+      console.log('Using direct navigation to occupation page');
+      window.location.href = '/onboarding/occupation';
+      
+      // Return early since we're navigating away
+      return;
     } catch (err) {
       setLoading(false);
       console.error('Failed to save personal information:', err);

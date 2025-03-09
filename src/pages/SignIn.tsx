@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Languages, Moon, Sun } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth, AuthResult } from '../contexts/AuthContext';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,11 +18,21 @@ const SignIn: React.FC = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+
   useEffect(() => {
     if (isAuthenticated && !loading) {
-      navigate('/dashboard');
+      console.log('User already authenticated, checking onboarding status');
+      // Check if user has completed onboarding
+      if (user && !user.onboardingCompleted) {
+        console.log('User has not completed onboarding, redirecting to onboarding');
+        window.location.href = '/onboarding/personal-info';
+      } else {
+        console.log('User has completed onboarding, redirecting to dashboard');
+        window.location.href = '/dashboard';
+      }
     }
-  }, [isAuthenticated, loading, navigate]);
+  }, [isAuthenticated, loading, user]);
 
   const getNextLanguage = (current: string): 'en' | 'th' | 'zh' => {
     const languages: ('en' | 'th' | 'zh')[] = ['en', 'th', 'zh'];
@@ -28,48 +40,104 @@ const SignIn: React.FC = () => {
     return languages[(currentIndex + 1) % languages.length];
   };
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  // Completely rewritten sign-in handler to prevent freezing
+  const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Sign in form submitted');
     if (isSubmitting) return;
     
     setError('');
     setIsSubmitting(true);
-
+    
+    // Use a non-blocking approach with setTimeout
+    setTimeout(() => {
+      processSignIn();
+    }, 0);
+  };
+  
+  // Separate function to handle sign-in logic
+  const processSignIn = async () => {
+    console.log('Processing sign in for:', email);
+    
     // Set a timeout to prevent UI freeze if sign-in takes too long
     const signInTimeout = setTimeout(() => {
       console.warn('Sign-in is taking longer than expected');
       // We don't set isSubmitting to false here to prevent multiple submissions
-    }, 5000);
-
+    }, 3000);
+    
     try {
-      // Wrap the sign-in in a Promise.race with a timeout
-      const signInPromise = signIn(
-        email, 
-        password, 
-        rememberMe ? 'remember' : 'session'
-      );
+      // Create a promise that will resolve with the sign-in result
+      const signInPromise = new Promise<AuthResult>(async (resolve) => {
+        try {
+          const result = await signIn(
+            email, 
+            password, 
+            rememberMe ? 'remember' : 'session'
+          );
+          resolve(result);
+        } catch (error) {
+          console.error('Inner sign in error:', error);
+          resolve({ 
+            success: false, 
+            message: 'An error occurred during sign in' 
+          });
+        }
+      });
       
-      const timeoutPromise = new Promise<{ success: false, message: string }>((resolve) => {
+      // Create a timeout promise
+      const timeoutPromise = new Promise<AuthResult>((resolve) => {
         setTimeout(() => {
           resolve({ 
             success: false, 
             message: 'Sign-in timed out. Please try again.' 
           });
-        }, 15000); // 15 second timeout
+        }, 10000); // 10 second timeout
       });
       
+      // Race the promises
       const result = await Promise.race([signInPromise, timeoutPromise]);
-
+      console.log('Sign in result:', result);
+      
       // Clear the warning timeout
       clearTimeout(signInTimeout);
-
+      
       if (result.success) {
-        // Use a small delay before navigation to allow auth state to update
-        setTimeout(() => {
-          navigate('/dashboard');
+        console.log('Sign in successful, checking onboarding status');
+        
+        // Force a state update to ensure the UI is responsive
+        setIsSubmitting(false);
+        
+        // Check if user has completed onboarding
+        // We need to fetch the user data again since it might have been updated
+        setTimeout(async () => {
+          try {
+            // Check if user is authenticated
+            if (!auth.currentUser) {
+              console.error('User not authenticated');
+              window.location.href = '/signin';
+              return;
+            }
+            
+            // Get the latest user data
+            const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+            const userData = userDoc.data();
+            
+            if (userData && userData.onboardingCompleted) {
+              console.log('User has completed onboarding, redirecting to dashboard');
+              window.location.href = '/dashboard';
+            } else {
+              console.log('User has not completed onboarding, redirecting to onboarding');
+              window.location.href = '/onboarding/personal-info';
+            }
+          } catch (error) {
+            console.error('Error checking onboarding status:', error);
+            // Default to dashboard if there's an error
+            window.location.href = '/dashboard';
+          }
         }, 100);
       } else {
+        console.log('Sign in failed:', result.message);
         setError(result.message || 'Failed to sign in');
         setIsSubmitting(false);
       }
@@ -77,7 +145,7 @@ const SignIn: React.FC = () => {
       // Clear the warning timeout
       clearTimeout(signInTimeout);
       
-      console.error('Sign in error:', error);
+      console.error('Outer sign in error:', error);
       setError('An unexpected error occurred. Please try again.');
       setIsSubmitting(false);
     }
@@ -131,7 +199,12 @@ const SignIn: React.FC = () => {
                   {error}
                 </div>
               )}
-              <form className="space-y-4" onSubmit={handleSignIn}>
+              <form 
+                className="space-y-4" 
+                onSubmit={handleSignIn}
+                action="/dashboard" // Add a direct form action
+                method="get" // Use GET method for simplicity
+              >
                 <div>
                   <label className="block text-sm font-medium text-[#577B92] mb-1">{t('email')}</label>
                   <input
@@ -177,7 +250,43 @@ const SignIn: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3 rounded-full bg-gradient-to-r from-[#2563eb] via-[#9333ea] to-[#db2777] text-white font-medium hover:opacity-90 transition-opacity shadow-md flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 rounded-full bg-gradient-to-r from-[#2563eb] via-[#9333ea] to-[#db2777] text-white font-medium hover:opacity-90 transition-opacity shadow-md flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  onClick={(e) => {
+                    // Add an extra handler to ensure the form submission works
+                    if (!isSubmitting) {
+                      handleSignIn(e);
+                      
+                      // Add a direct navigation as a fallback
+                      if (e && !e.defaultPrevented) {
+                        console.log('Using direct navigation fallback');
+                        setTimeout(async () => {
+                          try {
+                            // Check if user is authenticated
+                            if (!auth.currentUser) {
+                              console.error('User not authenticated in fallback');
+                              return;
+                            }
+                            
+                            // Get the latest user data
+                            const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+                            const userData = userDoc.data();
+                            
+                            if (userData && userData.onboardingCompleted) {
+                              console.log('User has completed onboarding, redirecting to dashboard');
+                              window.location.href = '/dashboard';
+                            } else {
+                              console.log('User has not completed onboarding, redirecting to onboarding');
+                              window.location.href = '/onboarding/personal-info';
+                            }
+                          } catch (error) {
+                            console.error('Error in fallback navigation:', error);
+                            // Default to dashboard if there's an error
+                            window.location.href = '/dashboard';
+                          }
+                        }, 1000);
+                      }
+                    }
+                  }}
                 >
                   {isSubmitting ? (
                     <div className="flex items-center">

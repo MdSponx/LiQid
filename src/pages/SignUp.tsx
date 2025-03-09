@@ -15,9 +15,9 @@ const SignUp: React.FC = () => {
   const { signUp } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const getNextLanguage = (current: string) => {
-    const languages = ['en', 'th', 'zh'];
-    const currentIndex = languages.indexOf(current);
+  const getNextLanguage = (current: string): 'en' | 'th' | 'zh' => {
+    const languages: ('en' | 'th' | 'zh')[] = ['en', 'th', 'zh'];
+    const currentIndex = languages.indexOf(current as 'en' | 'th' | 'zh');
     return languages[(currentIndex + 1) % languages.length];
   };
 
@@ -32,8 +32,13 @@ const SignUp: React.FC = () => {
       const result = await signUp(email, password);
       
       if (result.success) {
-        // Navigate to onboarding using React Router instead of window.location
-        navigate('/onboarding/personal-info', { replace: true });
+        // Use direct navigation with window.location.href instead of React Router
+        // This can help prevent freezing issues during navigation
+        console.log('Using direct navigation to onboarding');
+        window.location.href = '/onboarding/personal-info';
+        
+        // Return early since we're navigating away
+        return;
       } else {
         setError(result.message || 'Failed to create account');
         setIsSubmitting(false);

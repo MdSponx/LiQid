@@ -4,6 +4,9 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { ChevronDown } from 'lucide-react';
 
+// Define the Language type to match the one in LanguageContext
+type Language = 'en' | 'th' | 'zh';
+
 interface LandingPageProps {
   onEnter?: () => void;
 }
@@ -16,9 +19,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const languages = [
-    { code: 'en', flag: '🇺🇸', label: 'English' },
-    { code: 'th', flag: '🇹🇭', label: 'ไทย' },
-    { code: 'zh', flag: '🇨🇳', label: '中文' }
+    { code: 'en' as Language, flag: '🇺🇸', label: 'English' },
+    { code: 'th' as Language, flag: '🇹🇭', label: 'ไทย' },
+    { code: 'zh' as Language, flag: '🇨🇳', label: '中文' }
   ];
 
   const navItems = [
@@ -41,12 +44,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
   };
 
   const handleGetStarted = () => {
+    console.log('Get Started button clicked');
     if (user) {
       // If user is logged in, go to dashboard
       navigate('/dashboard');
     } else {
       // If user is not logged in, go to sign up page
       navigate('/signup');
+    }
+    
+    // If onEnter prop is provided, call it
+    if (onEnter) {
+      onEnter();
     }
   };
 
@@ -138,7 +147,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
           </h1>
           <button
             onClick={handleGetStarted}
-            className="px-12 py-4 text-[#F5F5F2] rounded-full text-xl font-['Noto_Sans_Thai'] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 button-gradient-animation"
+            className="px-12 py-4 text-[#F5F5F2] rounded-full text-xl font-['Noto_Sans_Thai'] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 button-gradient-animation cursor-pointer"
+            type="button"
           >
             {t('get_started')}
           </button>

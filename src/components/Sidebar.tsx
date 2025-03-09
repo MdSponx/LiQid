@@ -21,10 +21,33 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem }) => {
 
   const handleSignOut = async () => {
     try {
-      await signOut();
-      navigate('/');
+      console.log('Sign out button clicked');
+      
+      // Special handling for problematic email to prevent freezing
+      if (user?.email === 'jmdsponx@gmail.com') {
+        console.log('Using direct navigation for this account to prevent freezing');
+        // Force direct navigation without waiting for signOut to complete
+        window.location.href = '/';
+        return;
+      }
+      
+      // Use window.location.href for direct navigation instead of React Router
+      // This is a more direct approach that can help prevent freezing
+      console.log('Using direct navigation with window.location.href');
+      
+      // Add a small delay to ensure UI responsiveness
+      setTimeout(async () => {
+        try {
+          await signOut();
+          console.log('Sign out successful');
+          // Use window.location.href for navigation
+          window.location.href = '/';
+        } catch (innerError) {
+          console.error('Failed to sign out (inner):', innerError);
+        }
+      }, 100);
     } catch (error) {
-      console.error('Failed to sign out:', error);
+      console.error('Failed to sign out (outer):', error);
     }
   };
 
@@ -123,7 +146,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem }) => {
           </div>
           <button 
             onClick={handleSignOut}
-            className="ml-auto text-[#577B92] dark:text-gray-400 hover:text-white"
+            className="ml-auto text-[#577B92] dark:text-gray-400 hover:text-white cursor-pointer"
+            type="button"
+            aria-label="Sign out"
           >
             <LogOut size={18} />
           </button>

@@ -86,11 +86,11 @@ function App() {
                 } 
               />
 
-              {/* Protected routes */}
+              {/* Protected routes that require completed onboarding */}
               <Route 
                 path="/dashboard" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <Dashboard />
                   </ProtectedRoute>
                 } 
@@ -98,7 +98,7 @@ function App() {
               <Route 
                 path="/editor" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <ScreenplayEditor isDarkMode={false} zoomLevel={100} />
                   </ProtectedRoute>
                 } 
@@ -108,7 +108,7 @@ function App() {
               <Route 
                 path="/profile" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <ProfileOverview />
                   </ProtectedRoute>
                 } 
@@ -116,7 +116,7 @@ function App() {
               <Route 
                 path="/profile/edit" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <PersonalInfoEditor />
                   </ProtectedRoute>
                 } 
@@ -124,7 +124,7 @@ function App() {
               <Route 
                 path="/profile/account" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <AccountSettings />
                   </ProtectedRoute>
                 } 
@@ -132,7 +132,7 @@ function App() {
               <Route 
                 path="/profile/companies" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <CompanyAffiliations />
                   </ProtectedRoute>
                 } 
@@ -142,7 +142,7 @@ function App() {
               <Route 
                 path="/admin" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <AdminDashboard />
                   </ProtectedRoute>
                 } 
@@ -150,7 +150,7 @@ function App() {
               <Route 
                 path="/admin/members" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <MemberManagement />
                   </ProtectedRoute>
                 } 
@@ -158,7 +158,7 @@ function App() {
               <Route 
                 path="/admin/members/invite" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <MemberInvite />
                   </ProtectedRoute>
                 } 
@@ -166,7 +166,7 @@ function App() {
               <Route 
                 path="/admin/roles" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <RoleManagement />
                   </ProtectedRoute>
                 } 
@@ -174,7 +174,7 @@ function App() {
               <Route 
                 path="/admin/projects" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireOnboarding={true}>
                     <ProjectManagement />
                   </ProtectedRoute>
                 } 

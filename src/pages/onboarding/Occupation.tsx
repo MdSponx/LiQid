@@ -29,13 +29,19 @@ const Occupation: React.FC = () => {
     setLoading(true);
 
     try {
-      // Update user profile with occupation
+      // Update user profile with occupation and mark onboarding as completed
       await updateUserProfile({
         occupation,
+        onboardingCompleted: true
       });
       
-      // Navigate to the dashboard after completing onboarding
-      navigate('/dashboard');
+      // Use direct navigation with window.location.href instead of React Router
+      // This can help prevent freezing issues during navigation
+      console.log('Using direct navigation to dashboard');
+      window.location.href = '/dashboard';
+      
+      // Return early since we're navigating away
+      return;
     } catch (err) {
       setLoading(false);
       console.error('Failed to save occupation:', err);
@@ -96,7 +102,10 @@ const Occupation: React.FC = () => {
               <div className="pt-6 flex space-x-4">
                 <button
                   type="button"
-                  onClick={() => navigate('/onboarding/personal-info')}
+                  onClick={() => {
+                    console.log('Using direct navigation back to personal info');
+                    window.location.href = '/onboarding/personal-info';
+                  }}
                   className="flex items-center justify-center px-6 py-3 rounded-full border border-gray-300 text-[#577B92] hover:bg-gray-50"
                 >
                   <ArrowLeft size={16} className="mr-2" />
