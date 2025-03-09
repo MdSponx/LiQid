@@ -5,13 +5,11 @@ import { useAuth } from '../contexts/AuthContext';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAuth?: boolean;
-  requireOnboarding?: boolean;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   children, 
-  requireAuth = true,
-  requireOnboarding = false
+  requireAuth = true
 }) => {
   const { user, loading, isAuthenticated } = useAuth();
   const location = useLocation();
@@ -21,11 +19,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       isAuthenticated,
       user: user ? `User ID: ${user.id}` : 'No user',
       loading,
-      requireAuth,
-      requireOnboarding,
-      onboardingCompleted: user?.onboardingCompleted
+      requireAuth
     });
-  }, [isAuthenticated, user, loading, location.pathname, requireAuth, requireOnboarding]);
+  }, [isAuthenticated, user, loading, location.pathname, requireAuth]);
   
   if (loading) {
     return (
@@ -56,50 +52,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/signin" replace />;
   }
 
-  // Check if user has completed onboarding
-  if (requireAuth && isAuthenticated && user && !user.onboardingCompleted) {
-    // Skip this check for onboarding routes
-    const isOnboardingRoute = 
-      location.pathname === '/onboarding/personal-info' || 
-      location.pathname === '/onboarding/occupation';
-    
-    if (!isOnboardingRoute) {
-      console.log(`ProtectedRoute: Redirecting to onboarding from ${location.pathname}`);
-      
-      // Use a hybrid approach for navigation that works better in StackBlitz
-      // First, try React Router's Navigate component
-      setTimeout(() => {
-        // As a fallback, use a form-based navigation approach
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = '/onboarding/personal-info';
-        document.body.appendChild(form);
-        form.submit();
-      }, 300);
-      
-      // Still use React Router's Navigate component as the primary method
-      return <Navigate to="/onboarding/personal-info" replace />;
-    }
-  }
-
-  // For routes that require completed onboarding
-  if (requireOnboarding && isAuthenticated && user && !user.onboardingCompleted) {
-    console.log(`ProtectedRoute: Redirecting to onboarding from ${location.pathname}`);
-    
-    // Use a hybrid approach for navigation that works better in StackBlitz
-    // First, try React Router's Navigate component
-    setTimeout(() => {
-      // As a fallback, use a form-based navigation approach
-      const form = document.createElement('form');
-      form.method = 'GET';
-      form.action = '/onboarding/personal-info';
-      document.body.appendChild(form);
-      form.submit();
-    }, 300);
-    
-    // Still use React Router's Navigate component as the primary method
-    return <Navigate to="/onboarding/personal-info" replace />;
-  }
 
   if (!requireAuth && isAuthenticated) {
     console.log(`ProtectedRoute: Redirecting to dashboard from ${location.pathname}`);

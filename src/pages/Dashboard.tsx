@@ -286,6 +286,33 @@ const Dashboard: React.FC = () => {
       <Sidebar activeItem="dashboard" />
 
       <div className="flex-1 flex flex-col overflow-hidden bg-[#F5F5F2] dark:bg-gray-800">
+        {/* Profile Update Alert */}
+        {user && (!user.firstName || !user.lastName || !user.occupation) && (
+          <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 m-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <User className="h-5 w-5 text-blue-500" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">
+                  {t('complete_your_profile')}
+                </p>
+                <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                  {t('profile_update_message')}
+                </p>
+                <div className="mt-2">
+                  <Link
+                    to="/profile/edit"
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    {t('update_profile')}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-8 py-4">
           <div className="flex items-center justify-between">

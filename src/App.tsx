@@ -22,8 +22,6 @@ import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 
 // ใช้ lazy loading สำหรับหน้าอื่นๆ
-const PersonalInfo = lazy(() => import('./pages/onboarding/PersonalInfo'));
-const Occupation = lazy(() => import('./pages/onboarding/Occupation'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const ScreenplayEditor = lazy(() => import('./components/ScreenplayEditor'));
 
@@ -68,29 +66,11 @@ function App() {
                 } 
               />
 
-              {/* Onboarding routes */}
-              <Route 
-                path="/onboarding/personal-info" 
-                element={
-                  <ProtectedRoute>
-                    <PersonalInfo />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/onboarding/occupation" 
-                element={
-                  <ProtectedRoute>
-                    <Occupation />
-                  </ProtectedRoute>
-                } 
-              />
-
-              {/* Protected routes that require completed onboarding */}
+              {/* Protected routes */}
               <Route 
                 path="/dashboard" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <Dashboard />
                   </ProtectedRoute>
                 } 
@@ -98,7 +78,7 @@ function App() {
               <Route 
                 path="/editor" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <ScreenplayEditor isDarkMode={false} zoomLevel={100} />
                   </ProtectedRoute>
                 } 
@@ -108,7 +88,7 @@ function App() {
               <Route 
                 path="/profile" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <ProfileOverview />
                   </ProtectedRoute>
                 } 
@@ -116,7 +96,7 @@ function App() {
               <Route 
                 path="/profile/edit" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <PersonalInfoEditor />
                   </ProtectedRoute>
                 } 
@@ -124,7 +104,7 @@ function App() {
               <Route 
                 path="/profile/account" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <AccountSettings />
                   </ProtectedRoute>
                 } 
@@ -132,7 +112,7 @@ function App() {
               <Route 
                 path="/profile/companies" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <CompanyAffiliations />
                   </ProtectedRoute>
                 } 
@@ -142,7 +122,7 @@ function App() {
               <Route 
                 path="/admin" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <AdminDashboard />
                   </ProtectedRoute>
                 } 
@@ -150,7 +130,7 @@ function App() {
               <Route 
                 path="/admin/members" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <MemberManagement />
                   </ProtectedRoute>
                 } 
@@ -158,7 +138,7 @@ function App() {
               <Route 
                 path="/admin/members/invite" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <MemberInvite />
                   </ProtectedRoute>
                 } 
@@ -166,7 +146,7 @@ function App() {
               <Route 
                 path="/admin/roles" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <RoleManagement />
                   </ProtectedRoute>
                 } 
@@ -174,7 +154,7 @@ function App() {
               <Route 
                 path="/admin/projects" 
                 element={
-                  <ProtectedRoute requireOnboarding={true}>
+                  <ProtectedRoute>
                     <ProjectManagement />
                   </ProtectedRoute>
                 } 

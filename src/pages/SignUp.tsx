@@ -8,11 +8,12 @@ import { useDarkMode } from '../contexts/DarkModeContext';
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [error, setError] = useState('');
   const { language, setLanguage, t } = useLanguage();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+  const { signUp, updateUserProfile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getNextLanguage = (current: string): 'en' | 'th' | 'zh' => {
@@ -32,29 +33,47 @@ const SignUp: React.FC = () => {
       const result = await signUp(email, password);
       
       if (result.success) {
-        // Use a hybrid approach for navigation that works better in StackBlitz
-        console.log('Using hybrid navigation approach to onboarding');
+        // Extract first and last name from fullName
+        const nameParts = fullName.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
         
-        // First, set a flag in sessionStorage to indicate successful signup
-        sessionStorage.setItem('signupCompleted', 'true');
-        
-        // Then use a combination of approaches for maximum compatibility
-        setTimeout(() => {
-          // Try React Router navigation first
-          navigate('/onboarding/personal-info');
+        // Update user profile with fullName and mark onboarding as completed
+        try {
+          await updateUserProfile({
+            firstName,
+            lastName,
+            onboardingCompleted: true
+          });
           
-          // As a fallback, use a form-based navigation approach after a short delay
+          // Use a hybrid approach for navigation that works better in StackBlitz
+          console.log('Using hybrid navigation approach to dashboard');
+          
+          // First, set a flag in sessionStorage to indicate successful signup
+          sessionStorage.setItem('signupCompleted', 'true');
+          
+          // Then use a combination of approaches for maximum compatibility
           setTimeout(() => {
-            const form = document.createElement('form');
-            form.method = 'GET';
-            form.action = '/onboarding/personal-info';
-            document.body.appendChild(form);
-            form.submit();
-          }, 300);
-        }, 100);
-        
-        // Return early since we're navigating away
-        return;
+            // Try React Router navigation first
+            navigate('/dashboard');
+            
+            // As a fallback, use a form-based navigation approach after a short delay
+            setTimeout(() => {
+              const form = document.createElement('form');
+              form.method = 'GET';
+              form.action = '/dashboard';
+              document.body.appendChild(form);
+              form.submit();
+            }, 300);
+          }, 100);
+          
+          // Return early since we're navigating away
+          return;
+        } catch (profileError) {
+          console.error('Failed to update profile:', profileError);
+          setError('Account created but failed to save profile information. Please try again.');
+          setIsSubmitting(false);
+        }
       } else {
         setError(result.message || 'Failed to create account');
         setIsSubmitting(false);
@@ -103,6 +122,18 @@ const SignUp: React.FC = () => {
                 </div>
               )}
               <form className="space-y-4" onSubmit={handleSignUp}>
+                <div>
+                  <label className="block text-sm font-medium text-[#577B92] mb-1">{t('fullname')}</label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                    placeholder="John Doe"
+                    className="w-full px-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-[#1E4D3A] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-[#577B92] mb-1">{t('email')}</label>
                   <input
