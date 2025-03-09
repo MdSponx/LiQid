@@ -92,5 +92,6 @@ const enableOfflinePersistence = async () => {
   }
 };
 
+// Export all services and functions in a single statement
 export { auth, db, storage, enableOfflinePersistence, initAnalytics };
 export default app;
